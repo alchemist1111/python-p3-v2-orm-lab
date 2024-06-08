@@ -134,7 +134,6 @@ class Employee:
     @classmethod
     def instance_from_db(cls, row):
         """Return an Employee object having the attribute values from the table row."""
-
         # Check the dictionary for  existing instance using the row's primary key
         employee = cls.all.get(row[0])
         if employee:
@@ -186,5 +185,7 @@ class Employee:
         return cls.instance_from_db(row) if row else None
 
     def reviews(self):
-        """Return list of reviews associated with current employee"""
-        pass
+        from review import Review  # Adjust the import path based on your project structure
+        CURSOR.execute("SELECT * FROM reviews WHERE employee_id = ?", (self.id,))
+        rows = CURSOR.fetchall()
+        return [Review.instance_from_db(row) for row in rows]
